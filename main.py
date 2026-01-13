@@ -14,33 +14,29 @@ cars = [
 def index():
   return render_template('index.html', title='Home Page')
 
+
 @app.route('/cars', methods=['GET', 'POST'])
 def show_cars():
-  if request.method == 'POST':
-    brand = request.form.get('brand', '').strip()
+    if request.method == 'POST':
+        brand = request.form['brand']
+        tmp_cars = []
 
-    if brand == '':
-      return render_template(
+        for car in cars:
+            if brand.lower() in car['brand'].lower():
+                tmp_cars.append(car)
+
+        return render_template(
+            'cars/cars.html',
+            title='Show Cars by Brand Page',
+            cars=tmp_cars
+        )
+
+    return render_template(
         'cars/cars.html',
         title='Show All Cars Page',
         cars=cars
-      )
-    tmp_cars = []
-    for car in cars:
-      if brand.lower() in car['brand'].lower():
-        tmp_cars.append(car)
-
-    return render_template(
-      'cars/cars.html',
-      title='Show Cars by Brand Page',
-      cars=tmp_cars
     )
-
-  return render_template(
-    'cars/cars.html',
-    title='Show All Cars Page',
-    cars=cars
-  )
+    
 
 @app.route('/cars/new', methods=['GET', 'POST'])
 def new_car():
